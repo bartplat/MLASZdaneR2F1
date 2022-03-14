@@ -1,7 +1,17 @@
 #' @title Obliczanie wskaznikow na poziomie zagregowanym
+#' @description Funkcja oblicza wskaźnik opisujący liczbę zbadanych w grupie.
+#' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
+#' @return liczba zbadanych
+#' @export
+liczba_zbadanych = function(x) {
+  stopifnot(is.data.frame(x))
+  return(nrow(x))
+}
+#' @title Obliczanie wskaznikow na poziomie zagregowanym
 #' @description Funkcja przechowująca nazwę i adres szkoły jako listę.
 #' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
 #' @return lista
+#' @export
 dane_szkoly = function(x) {
   list(
     `nazwa szkoły` = unique(x$szk_nazwa),
@@ -13,6 +23,7 @@ dane_szkoly = function(x) {
 #' grupie.
 #' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
 #' @return liczba
+#' @export
 liczba_kobiet_2rm = function(x) {
   return(sum(x$M1 %in% 1))
 }
@@ -22,6 +33,7 @@ liczba_kobiet_2rm = function(x) {
 #' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
 #' @return ciąg znaków
 #' @importFrom dplyr %>% .data case_when summarise
+#' @export
 firma_badawcza = function(x) {
   x = x %>%
     summarise(Firma_nazwa = case_when(n_distinct(.data$Firma) > 1 ~ "ndt.",
@@ -35,6 +47,7 @@ firma_badawcza = function(x) {
 #' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
 #' @return lista
 #' @importFrom dplyr %>% .data case_when distinct mutate select
+#' @export
 formy = function(x) {
   x = x %>%
     select("S1","M1", "woj_nazwa") %>%
@@ -71,6 +84,7 @@ formy = function(x) {
 #' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
 #' @return lista
 #' @importFrom dplyr %>%
+#' @export
 zawod_liczebnosc = function(x) {
   n = list(n = sum(!is.na(x$S2_zawod)))
 
@@ -88,6 +102,7 @@ zawod_liczebnosc = function(x) {
 #' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
 #' @return lista
 #' @importFrom dplyr %>% .data
+#' @export
 zawod_przygotowanie_szkola = function(x) {
   x %>%
     select("S2_zawod", "W3") %>%
@@ -104,6 +119,7 @@ zawod_przygotowanie_szkola = function(x) {
 #' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
 #' @return lista
 #' @importFrom dplyr %>%
+#' @export
 uczestnictwo_pnz = function(x) {
   list(
     etykieta = "Formy PNZ - wsad do tabeli 2.",
@@ -123,6 +139,7 @@ uczestnictwo_pnz = function(x) {
 #' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
 #' @return lista
 #' @importFrom dplyr %>%
+#' @export
 szkola_1_wyboru = function(x) {
   list(etykieta = "Czy obecna szkoła jest jedną z tych, do których najbardziej chciał się dostać?",
        n = sum(x$W1 %in% c(1:3, 7)),
@@ -140,6 +157,7 @@ szkola_1_wyboru = function(x) {
 #' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
 #' @return lista
 #' @importFrom dplyr %>%
+#' @export
 ponowny_wybor = function(x) {
   list(etykieta = "[%] Czy wybrałby ponownie szkołę?",
        n = sum(x$W2 %in% (1:7)),
@@ -160,6 +178,7 @@ ponowny_wybor = function(x) {
 #' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
 #' @return lista
 #' @importFrom dplyr %>%
+#' @export
 przygotowanie_do_zawodu = function(x) {
   list(etykieta = "[%] Na ile szkoła przygotowała do wykonywania zawodu?",
        n = sum(x$W3 %in% (1:7)),
@@ -182,6 +201,7 @@ przygotowanie_do_zawodu = function(x) {
 #' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
 #' @return lista
 #' @importFrom dplyr %>%
+#' @export
 przyg_zawodu_prakt_PL = function(x) {
   list(etykieta = "[%] Praktyki u pracodawcy w Polsce",
        n = sum(x$PNZ3_1 %in% (1:5)),
@@ -202,6 +222,7 @@ przyg_zawodu_prakt_PL = function(x) {
 #' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
 #' @return lista
 #' @importFrom dplyr %>%
+#' @export
 przyg_zawodu_prakt_niePL = function(x) {
   list(etykieta = "[%] Praktyki u pracodawcy za granicą",
        n = sum(x$PNZ3_2 %in% (1:5)),
@@ -221,6 +242,7 @@ przyg_zawodu_prakt_niePL = function(x) {
 #' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
 #' @return lista
 #' @importFrom dplyr %>%
+#' @export
 przyg_zaw_prakt_ANY = function(x) {
   list(etykieta = "PNZ3_1 lub PNZ3_2 kody doskonale i dobrze (4 i 5)",
        n = sum(x$PNZ3_1 %in% (1:5) | x$PNZ3_2 %in% (1:5)),
@@ -240,6 +262,7 @@ przyg_zaw_prakt_ANY = function(x) {
 #' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
 #' @return lista
 #' @importFrom dplyr %>%
+#' @export
 przyg_zawodu_zaj_PL = function(x) {
   list(etykieta = "[%] Zajęcia u pracodawcy w Polsce",
        n = sum(x$PNZ5_1 %in% (1:5)),
@@ -261,6 +284,7 @@ przyg_zawodu_zaj_PL = function(x) {
 #' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
 #' @return lista
 #' @importFrom dplyr %>%
+#' @export
 przyg_zawodu_zaj_niePL = function(x) {
   list(etykieta = "[%] Zajęcia u pracodawcy za granicą",
        n = sum(x$PNZ5_2 %in% (1:5)),
@@ -281,6 +305,7 @@ przyg_zawodu_zaj_niePL = function(x) {
 #' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
 #' @return lista
 #' @importFrom dplyr %>%
+#' @export
 przyg_zawodu_zaj_szkola = function(x) {
   list(etykieta = "[%] Zajęcia w szkole",
        n = sum(x$PNZ5_3 %in% (1:5)),
@@ -302,6 +327,7 @@ przyg_zawodu_zaj_szkola = function(x) {
 #' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
 #' @return lista
 #' @importFrom dplyr %>%
+#' @export
 przyg_zawodu_zaj_ckp = function(x) {
   list(etykieta = "[%] Zajęcia w CKP / CKZ",
        n = sum(x$PNZ5_4 %in% (1:5)),
@@ -322,6 +348,7 @@ przyg_zawodu_zaj_ckp = function(x) {
 #' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
 #' @return lista
 #' @importFrom dplyr %>%
+#' @export
 przyg_zaw_zaj_ANY = function(x) {
   list(etykieta = "PNZ5_1 - PNZ5_4 kody doskonale i dobrze (4 i 5)",
        n = sum(x$PNZ5_1 %in% (1:5) |
@@ -349,6 +376,7 @@ przyg_zaw_zaj_ANY = function(x) {
 #' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
 #' @return lista
 #' @importFrom dplyr %>%
+#' @export
 nauka_zawod = function(x) {
   list(etykieta = "[%] Ocena nauki w kontekście wykonywanego zawodu",
        n = sum(x$PNZ9 %in% (1:5)),
@@ -368,6 +396,7 @@ nauka_zawod = function(x) {
 #' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
 #' @return lista
 #' @importFrom dplyr %>%
+#' @export
 ocena_pnz = function(x) {
   list(etykieta = "[%] Min. 1 fomra PNZ przygotowała dobrze lub b. dobrze",
        n = sum(x$PNZ3_1 %in% 1:5 |
@@ -419,6 +448,7 @@ ocena_pnz = function(x) {
 #' @return lista
 #' @importFrom dplyr %>%
 #' @importFrom rlang ensym
+#' @export
 plany_6m = function(x, zmienna, opis) {
   zmienna = ensym(zmienna)
   list(etykieta = opis,
@@ -432,6 +462,7 @@ plany_6m = function(x, zmienna, opis) {
 #' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
 #' @return lista
 #' @importFrom dplyr %>%
+#' @export
 czy_plany_eduk = function(x) {
   list(etykieta = "[%] Plany edukacyjne - 6 m. od ukończenia szkoły",
        n = sum(x$PL2_1 %in% c(1:4, 7) |
@@ -463,6 +494,7 @@ czy_plany_eduk = function(x) {
 #' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
 #' @return lista
 #' @importFrom dplyr %>%
+#' @export
 plany_eduk_tak = function(x) {
   list(etykieta = "[%] W ciągu N12M zamierza podjąć lub podjął pracę w wyuczonym zawodzie",
        n = sum(x$PL4 != 97 | x$PL6 != 97),
@@ -478,6 +510,7 @@ plany_eduk_tak = function(x) {
 #' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
 #' @return lista
 #' @importFrom dplyr %>%
+#' @export
 plany_eduk_nie = function(x) {
   list(etykieta = "[%] Nie pracuje w wyuczonym zawodzi i w ciągu N12M nie zamierza podjąć pracy w wyuczonym zawodzie",
        n = sum(x$PL2_1 %in% c(1:4, 7) |
@@ -508,6 +541,7 @@ plany_eduk_nie = function(x) {
 #' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
 #' @return lista
 #' @importFrom dplyr %>%
+#' @export
 praca_zarobkowa = function(x) {
   list(
     etykieta = "Pracujący zarobkowo",
@@ -522,6 +556,7 @@ praca_zarobkowa = function(x) {
 #' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
 #' @return lista
 #' @importFrom dplyr %>%
+#' @export
 praca_poza_wyuczonym = function(x) {
   list(
     etykieta = "Pracujący poza wyuczonym zawodem",
@@ -538,6 +573,7 @@ praca_poza_wyuczonym = function(x) {
 #' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
 #' @return lista
 #' @importFrom dplyr %>%
+#' @export
 brak_pracy = function(x) {
   list(
     etykieta = "Nie pracujący zarobkowo",
@@ -555,6 +591,7 @@ brak_pracy = function(x) {
 #' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
 #' @return lista
 #' @importFrom dplyr %>%
+#' @export
 mlodociani_praca = function(x) {
   list(
     etykieta = "Młodociani pracownicy",
